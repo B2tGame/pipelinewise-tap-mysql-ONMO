@@ -271,11 +271,14 @@ def schema_for_column(column):  # pylint: disable=too-many-branches
             result.multipleOf = 10 ** (0 - column.numeric_scale)
 
     elif data_type in JSON_TYPES:
-        result.type = ['null', 'object']
+        result.type = ['null', 'VARIANT']
 
     elif data_type in STRING_TYPES:
         result.type = ['null', 'string']
         result.maxLength = column.character_maximum_length
+
+        if data_type == 'longtext':
+            result.maxLength = 16777216
 
     elif data_type in DATETIME_TYPES:
         result.type = ['null', 'string']
